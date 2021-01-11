@@ -1,10 +1,33 @@
-from github import Github
+import os
+import sys
 import base64
+from dotenv import load_dotenv
+from github import Github
 
-g = Github("")
+# get current working directory
+cwd = os.getcwd()
 
-repo = g.get_repo("AsciiKay/Beginners-Python-Examples")
 
-contents = repo.get_contents("math/aircraft_thrust.py")
+# set env vars
+load_dotenv()
 
-print(contents.decoded_content.decode("utf-8"))
+token = os.getenv("TOKEN")
+
+users = ['asharathore/coding-practise', 'Aayushi-Mittal/Rock-Paper-Scissors']
+g = Github(token)
+
+
+for user in users:
+    repo = g.get_repo(user)
+    filename = user[:5]
+    try:
+        contents = repo.get_contents("index.html")
+        with open(f'{cwd}/{filename}.html', 'w+') as f:
+            f.write(contents.decoded_content.decode('utf-8'))
+    except TypeError as e:
+        print(e)
+    except:
+        print("No such file found")
+
+
+
